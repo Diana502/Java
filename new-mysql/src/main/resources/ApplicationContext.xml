@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/rabbit
+                           http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+    
+    
+    <!-- 定义连接工厂 -->
+    <rabbit:connection-factory id="rabbitConnectionFactory" 
+        host="172.16.81.145" port="5672"
+        username="shansuna" password="shansuna"
+        virtual-host="/newsql"/>
+    
+    <rabbit:admin connection-factory="rabbitConnectionFactory"/>
+    
+    <!-- 
+    	定义rabbitmq的模板 消息是发送到队列还是交换机
+    	如果发送的队列就添加queue=""属性
+    	如果发送的交换机就添加exchange=""属性
+     -->
+    <rabbit:template id="rabbitmqTemplate" 
+        connection-factory="rabbitConnectionFactory"
+        exchange="fanoutExchange" />
+    
+   
+    
+    <!-- 定义队列  auto-declare="true"是否自动声明此元素 默认是true-->
+    <rabbit:queue name="myQueue"/>
+    
+    <!-- 定义交换机 发布订阅模式-->
+    <rabbit:fanout-exchange name="fanoutExchange" >
+        <rabbit:bindings>
+            <rabbit:binding queue="myQueue" />
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+    <!-- 
+        路由模式
+    <rabbit:direct-exchange name="directExchange" auto-declare="true" auto-delete="false">
+        <rabbit:bindings>
+            <rabbit:binding queue="myQueue" key="key1" />
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+        通配服务（广播）模式
+    <rabbit:topic-exchange name="topicExchange" auto-declare="true" auto-delete="false">
+        <rabbit:bindings>
+            <rabbit:binding pattern="abc.#" queue="myQueue"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>  
+    -->
+    
+    <!-- 定义监听容器 当收到消息时，会执行内部的配置 -->
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+        <!-- 定义那个类里面的那个方法用于处理收到的信息 -->
+        <rabbit:listener ref="consumer" method="printMessage" queue-names="myQueue"/>
+    </rabbit:listener-container>
+    
+    <!-- 定义消费者 -->
+    <bean id="consumer" class="net.yto.newmysql.rabbitMQ.spring.Consumer"></bean>
+    
+</beans>

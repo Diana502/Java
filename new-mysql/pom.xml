@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<groupId>net.yto</groupId>
+	<artifactId>web-parent</artifactId>
+	<version>1.0.0</version>
+  </parent>
+  <groupId>new-mysql</groupId>
+  <artifactId>new-mysql</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>new-mysql Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+  
+  <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	</dependency>
+  <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId> 
+	</dependency>
+	
+	
+	<!-- 数据库继承MapperMarkerInterface-->
+	<dependency>
+		<groupId>net.yto</groupId>
+		<artifactId>web-framework</artifactId>
+		<version>1.0.0</version>
+		<type>war</type>
+	</dependency>
+	<dependency>
+		<groupId>net.yto</groupId>
+		<artifactId>web-framework</artifactId>
+		<version>1.0.0</version>
+		<type>jar</type>
+		<classifier>classes</classifier>
+	</dependency>
+	
+  	<!-- 打包需要的 -->
+	<dependency>
+	   <groupId>javax.servlet</groupId>
+	   <artifactId>javax.servlet-api</artifactId>
+	   <scope>provided</scope>
+	</dependency>
+	
+	<!-- rabbitmq客户端 https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
+	<dependency>
+	    <groupId>com.rabbitmq</groupId>
+	    <artifactId>amqp-client</artifactId>
+	    <version>5.7.1</version>
+	</dependency>
+	<!-- Spring和rabbitmq整合 https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit -->
+	<dependency>
+	    <groupId>org.springframework.amqp</groupId>
+	    <artifactId>spring-rabbit</artifactId>
+	    <version>2.1.6.RELEASE</version>
+	</dependency>
+	
+	<!-- 测试 -->
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.12</version>
+	    <scope>test</scope>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-test</artifactId>
+	    <version>4.3.0.RELEASE</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-tx</artifactId>
+	    <version>4.3.0.RELEASE</version>
+	</dependency>
+
+  </dependencies>
+  <build>
+    <finalName>new-mysql</finalName>
+  </build>
+</project>

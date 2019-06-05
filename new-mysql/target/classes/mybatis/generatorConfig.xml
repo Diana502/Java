@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="yto">
+		<jdbcConnection
+			connectionURL="jdbc:mysql://172.16.200.101:3306/test?characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;allowPublicKeyRetrieval=true"
+			driverClass="com.mysql.cj.jdbc.Driver" 
+			password="shansuna"
+			userId="shansuna" />
+		<javaModelGenerator
+			targetPackage="net.yto.newmysql.models"
+			targetProject="new-mysql/src/main/java" />
+		<sqlMapGenerator targetPackage="mybatis.mappers"
+			targetProject="new-mysql/src/main/resources">
+			<property name="" value="" />
+		</sqlMapGenerator>
+		<javaClientGenerator
+			targetPackage="net.yto.newmysql.mappers"
+			targetProject="new-mysql/src/main/java" type="XMLMAPPER" />
+
+		<table schema="yto" tableName="student"
+			domainObjectName="StudentEntity">
+			<generatedKey column="id" sqlStatement="mysql"
+				identity="true" />
+		</table>
+		<table schema="yto" tableName="user"
+			domainObjectName="UserEntity">
+			<generatedKey column="id" sqlStatement="mysql"
+				identity="true" />
+		</table>
+	</context>
+</generatorConfiguration>
