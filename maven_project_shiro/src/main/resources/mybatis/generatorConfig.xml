@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<context id="maven_project">
+		<jdbcConnection
+			connectionURL="jdbc:mysql://127.0.0.1:3306/credit?characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;allowPublicKeyRetrieval=true"
+			driverClass="com.mysql.cj.jdbc.Driver"
+			password="123456"
+			userId="root" />
+		
+		<javaModelGenerator targetPackage="diana.maven.project.models" targetProject="src/main/java" />
+		<sqlMapGenerator targetPackage="mybatis.mappers" targetProject="src/main/resources">
+			<property name="" value="" /> 
+		</sqlMapGenerator>
+		<javaClientGenerator targetPackage="diana.maven.project.mappers" targetProject="src/main/java" type="XMLMAPPER" />
+
+
+		<table schema="credit" tableName="credit_rating" domainObjectName="CreditRating">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="credit_record" domainObjectName="CreditRecord">
+            <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+        </table>
+		<table schema="credit" tableName="credit_subject_type" domainObjectName="CreditSubjectType">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="credit_type" domainObjectName="CreditType">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="platform_role" domainObjectName="PlatformRole">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="platform_role_user" domainObjectName="PlatformRoleUser">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="platform_user" domainObjectName="PlatformUser">
+            <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+        </table>
+		<table schema="credit" tableName="function" domainObjectName="Function">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="permission" domainObjectName="PermissionService">
+		<generatedKey column="id" sqlStatement="mysql" identity="true"/>
+		</table>
+		<table schema="credit" tableName="credit_subject" domainObjectName="CreditSubject">
+            <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+        </table>
+		<table schema="credit" tableName="operation_record" domainObjectName="OperationRecord">
+            <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+        </table>
+	</context>
+</generatorConfiguration>

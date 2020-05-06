@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="../bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+
+    <title>首页</title>
+</head>
+<style>
+    form{
+        padding-top: 150px;
+    }
+    input{
+        font-family: "微软雅黑";
+    }
+</style>
+<body>
+    <form class="form-inline col-lg-offset-3" >
+
+        <div class="row">
+            <button type="button" class="btn btn-primary" id="addUser">账号新增</button>
+            <button type="button" class="btn btn-danger" id="updateUser">账号修改</button>
+            <button type="button" class="btn btn-warning" id="lockedUser">账号锁定</button>
+            <button type="button" class="btn btn-success" id="resetUser">账号启用</button>
+            <button type="button" class="btn btn-info" id="selectUser">账号查询</button>
+        </div>
+
+        <div class="row">
+            <button type="button" class="btn btn-primary" id="reportRecord">上报失信记录</button>
+            <button type="button" class="btn btn-danger" id="auditRecord">审核失信记录</button>
+            <button type="button" class="btn btn-success" id="selectRecord">查询失信记录</button>
+            <button type="button" class="btn btn-info" id="appealRecord">申诉失信记录</button>
+            <button type="button" class="btn btn-warning" id="repealRecord">撤销失信记录</button>
+        </div>
+
+    </form>
+
+</body>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="../bootstrap/jquery/jquery-3.5.0.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+    function addUser(){
+        $("#addUser").click(function () {
+            $.post("/maven_project_shiro/user/addUser", {},function (resultMap) {
+                    if(resultMap.code == 0){
+                        alert(resultMap.message);
+                    }else{
+                        alert(resultMap.message);
+                    }
+                })
+        })
+    }
+
+    function updateUser(){
+        $("#updateUser").click(function () {
+            $.post("/maven_project_shiro/user/updateUser", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function lockedUser(){
+        $("#lockedUser").click(function () {
+            $.post("/maven_project_shiro/user/lockedUser", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function resetUser(){
+        $("#resetUser").click(function () {
+            $.post("/maven_project_shiro/user/resetUser", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function selectUser(){
+        $("#selectUser").click(function () {
+            $.post("/maven_project_shiro/user/selectUser", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function reportRecord(){
+        $("#reportRecord").click(function () {
+            $.post("/maven_project_shiro/record/reportRecord", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function auditRecord(){
+        $("#auditRecord").click(function () {
+            $.post("/maven_project_shiro/record/auditRecord", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function selectRecord(){
+        $("#selectRecord").click(function () {
+            $.post("/maven_project_shiro/record/selectRecord", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function appealRecord(){
+        $("#appealRecord").click(function () {
+            $.post("/maven_project_shiro/record/appealRecord", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    function repealRecord(){
+        $("#repealRecord").click(function () {
+            $.post("/maven_project_shiro/record/repealRecord", {},function (resultMap) {
+                if(resultMap.code == 0){
+                    alert(resultMap.message);
+                }else{
+                    alert(resultMap.message);
+                }
+            })
+        })
+    }
+
+    $(function(){
+        addUser();
+        updateUser();
+        lockedUser();
+        resetUser();
+        selectUser();
+        reportRecord();
+        auditRecord();
+        selectRecord();
+        appealRecord();
+        repealRecord();
+    });
+</script>
+</html>
+
+
