@@ -16,12 +16,12 @@ public class ShiroExceptionResolver implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
-        if(ex instanceof UnauthorizedException) {
-            mv.addObject("code","2001");
-            mv.addObject("message","您没有此权限");
-        }else {
-            mv.addObject("code","9001");
-            mv.addObject("message","未知错误");
+        if (ex instanceof UnauthorizedException) {
+            mv.addObject("code", "2001");
+            mv.addObject("message", "您没有此权限");
+        } else {
+            mv.addObject("code", "9001");
+            mv.addObject("message", "未知错误");
         }
         return mv;
     }

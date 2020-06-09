@@ -48,7 +48,7 @@
 				<input type="text" class="form-control" id="kaptcha" name="kaptcha" placeholder="验证码">
 			</div>
 			<div for="kaptcha" class="col-sm-4">
-				<img width="20%" id="kaptchaImg" src="http://localhost:8081/maven_project_shiro/login/kaptcha">
+				<img width="20%" id="kaptchaImg" src="http://localhost:8085/maven_project_shiro/login/kaptcha">
 			</div>
 		</div>
 		<div class="form-group">
@@ -132,7 +132,7 @@
 		$("#kaptchaImg").click(function() {
 			var kaptchaImg = $("#kaptchaImg");
 			var date = new Date();
-			kaptchaImg.attr("src","http://localhost:8081/maven_project_shiro/login/kaptcha?date=" + date.getTime());
+			kaptchaImg.attr("src","http://localhost:8085/maven_project_shiro/login/kaptcha?date=" + date.getTime());
 		})
 	}
 

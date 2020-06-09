@@ -1,6 +1,6 @@
 package diana.maven.project.entity;
 
-import diana.maven.project.models.PlatformRole;
+import diana.maven.project.model.PlatformRole;
 
 /**
  * @author Suna

@@ -1,78 +1,54 @@
 package diana.maven.project.config;
 
-import org.apache.ibatis.datasource.pooled.PooledDataSource;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.http.CacheControl;
+import org.springframework.web.servlet.config.annotation.*;
 
-import javax.sql.DataSource;
-import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 
 @Configuration
 @EnableWebMvc
-@EnableTransactionManagement  //开启事务管理
-@ComponentScan(basePackages= {"diana.maven.project"})
-@PropertySource({ "classpath:datasource.properties" })
-@MapperScan(basePackages = {"diana.maven.project.mappers"})
-public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware{
-	
-	@Autowired
-	Environment environment;
-	
-	ApplicationContext applicationContext;
+@ComponentScan(basePackages = {"diana.maven.project"})
+@PropertySource({"classpath:datasource.properties"})
+public class WebConfig extends WebMvcConfigurerAdapter {
 
-	@Bean   //事务管理
-	DataSourceTransactionManager transactionManager() {
-		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-		transactionManager.setDataSource(dataSource());
-		return transactionManager;
-	}
-	
-	@Bean  //数据库数据源
-	DataSource dataSource() {
-		PooledDataSource dataSource = new PooledDataSource(environment.getProperty("dev.driver"),
-				environment.getProperty("dev.url"), environment.getProperty("dev.username"),
-				environment.getProperty("dev.password"));
-		return dataSource;
-	}
+    @Autowired
+    Environment environment;
 
-	@Bean
-	SqlSessionFactoryBean sqlSessionFactory() {
-		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
-		try {
-			sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:mybatis/mappers/**/*.xml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		sqlSessionFactory.setDataSource(dataSource());
-		return sqlSessionFactory;
-	}
-	
-	@Override  //加载静态资源的时候就会按照servelt方式去加载
-	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-		configurer.enable();
-	}
+    /**
+     * 用来解析XML文件里 ${…} 占位符的
+     * 可以使用setLocation和setProperties设置系统属性和环境变量
+     * @return
+     */
+    @Bean
+    static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer placeholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        return placeholderConfigurer;
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-	
-	
+    /**
+     * 解决跨域问题
+     * @param registry
+     */
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins(new String[]{"*"}).allowedMethods(new String[]{"*"});
+    }
+
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(new String[]{"/static/**"}).addResourceLocations(new String[]{this.environment.getProperty("static.url")}).addResourceLocations(new String[]{"/static/"}).setCacheControl(CacheControl.maxAge(1L, TimeUnit.HOURS).cachePublic());
+    }
+
+    @Override  //加载静态资源的时候就会按照servelt方式去加载
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+
 }

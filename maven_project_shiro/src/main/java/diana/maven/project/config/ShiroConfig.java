@@ -29,7 +29,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager());
 
         //配置访问权限，其中authc指定需要认证的uri，anon指定排除认证的uri
-        Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         filterChainDefinitionMap.put("/static/bootstrap/**", "anon");
         filterChainDefinitionMap.put("/role/getRoles", "anon");
         filterChainDefinitionMap.put("/login/kaptcha", "anon");
@@ -60,7 +60,8 @@ public class ShiroConfig {
         return myRealm;
     }
 
-    @Bean  //设置加密算法为MD5
+    @Bean
+        //设置加密算法为MD5
     HashedCredentialsMatcher credentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName(Md5Hash.ALGORITHM_NAME);
@@ -74,7 +75,7 @@ public class ShiroConfig {
      * 配置以下两个bean(DefaultAdvisorAutoProxyCreator和AuthorizationAttributeSourceAdvisor)
      */
     @Bean
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
         return advisorAutoProxyCreator;
@@ -92,10 +93,11 @@ public class ShiroConfig {
 
     /**
      * 自定义shiro权限异常过滤器
+     *
      * @return
      */
     @Bean
-    public ShiroExceptionResolver shiroExceptionResolver(){
+    public ShiroExceptionResolver shiroExceptionResolver() {
         return new ShiroExceptionResolver();
     }
 }

@@ -1,19 +1,17 @@
 package diana.maven.project.shiro;
 
 import diana.maven.project.entity.LoginUserEntity;
-import diana.maven.project.models.Function;
-import diana.maven.project.models.PlatformRoleUser;
-import diana.maven.project.models.PlatformUser;
-import diana.maven.project.services.FunctionService;
-import diana.maven.project.services.RoleService;
-import diana.maven.project.services.UserService;
-import org.apache.shiro.SecurityUtils;
+import diana.maven.project.model.Function;
+import diana.maven.project.model.PlatformRoleUser;
+import diana.maven.project.model.PlatformUser;
+import diana.maven.project.service.FunctionService;
+import diana.maven.project.service.RoleService;
+import diana.maven.project.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -33,6 +31,7 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 授权
+     *
      * @param principals
      * @return
      */
@@ -46,7 +45,7 @@ public class MyRealm extends AuthorizingRealm {
         //获取数据库中该登录角色所拥有的权限
         List<Function> functionList = functionService.getFunctionByRoleId(loginUser.getRole().getId());
         //为该用户设置权限
-        for (Function func:functionList) {
+        for (Function func : functionList) {
             simpleAuthorizationInfo.addStringPermission(func.getFunctionCode());
         }
         return simpleAuthorizationInfo;
@@ -54,6 +53,7 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 登录认证
+     *
      * @param token
      * @return
      * @throws AuthenticationException
@@ -65,18 +65,18 @@ public class MyRealm extends AuthorizingRealm {
         //验证账号是否存在
         String userName = loginToken.getUsername();
         PlatformUser platformUser = userService.selectPlaformUserByLoginName(userName);
-        if(null == platformUser){
+        if (null == platformUser) {
             throw new UnknownAccountException("未知用户");
         }
         //验证该用户是否被锁定
-        if(Boolean.TRUE.equals(platformUser.getLocked())){
+        if (Boolean.TRUE.equals(platformUser.getLocked())) {
             throw new LockedAccountException("用户被锁定");
         }
         //验证用户是否有该角色
         Integer roleId = loginToken.getRole().getId();
-        PlatformRoleUser userRole = roleService.hasRole(platformUser.getId(),roleId);
-        if(null == userRole){
-            throw new UnknownAccountException("该用户无"+loginToken.getRole().getDisplayRoleName()+"角色");
+        PlatformRoleUser userRole = roleService.hasRole(platformUser.getId(), roleId);
+        if (null == userRole) {
+            throw new UnknownAccountException("该用户无" + loginToken.getRole().getDisplayRoleName() + "角色");
         }
         //将信息封装成登录用户信息
         LoginUserEntity loginUserEntity = new LoginUserEntity();
