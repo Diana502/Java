@@ -34,7 +34,7 @@ public class ShiroConfig {
 
         //添加自定义过滤器，并取名jwt
         LinkedHashMap<String, Filter> filterLinkedHashMap = new LinkedHashMap<>();
-        filterLinkedHashMap.put("jwt",jwtFilter());
+        filterLinkedHashMap.put("jwt",new JwtFilter());
         shiroFilterFactoryBean.setFilters(filterLinkedHashMap);
 
         //配置访问权限，其中authc指定需要认证的uri，anon指定排除认证的uri
@@ -50,17 +50,16 @@ public class ShiroConfig {
 
         //配置登录的url和登录成功的url以及验证失败的url
         shiroFilterFactoryBean.setLoginUrl("/static/html/login.html");
-        shiroFilterFactoryBean.setSuccessUrl("/static/html/index.html");
+        shiroFilterFactoryBean.setSuccessUrl("/static/html/home.html");
         shiroFilterFactoryBean.setUnauthorizedUrl("/static/html/403.html");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
     }
 
-    @Bean
-    public JwtFilter jwtFilter() {
-        return new JwtFilter();
-    }
+//    public JwtFilter jwtFilter() {
+//        return new JwtFilter();
+//    }
 
     @Bean
     SecurityManager securityManager() {
@@ -80,7 +79,7 @@ public class ShiroConfig {
     @Bean
     MyRealm myRealm() {
         MyRealm myRealm = new MyRealm();
-        myRealm.setCredentialsMatcher(credentialsMatcher());
+//        myRealm.setCredentialsMatcher(credentialsMatcher());
         return myRealm;
     }
 
