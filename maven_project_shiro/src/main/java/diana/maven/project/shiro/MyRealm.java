@@ -1,7 +1,10 @@
 package diana.maven.project.shiro;
 
 import diana.maven.project.entity.LoginUserEntity;
+import diana.maven.project.jwt.JwtManager;
+import diana.maven.project.jwt.JwtToken;
 import diana.maven.project.model.Function;
+import diana.maven.project.model.PlatformRole;
 import diana.maven.project.model.PlatformRoleUser;
 import diana.maven.project.model.PlatformUser;
 import diana.maven.project.service.FunctionService;
@@ -12,6 +15,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -29,6 +33,11 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     FunctionService functionService;
 
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JwtToken;
+    }
+
     /**
      * 授权
      *
@@ -38,12 +47,15 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         //获取当前登录对象的信息
-        LoginUserEntity loginUser = (LoginUserEntity) principals.getPrimaryPrincipal();
+        String token = principals.toString();
+        String roleName = JwtManager.getRoleName(token);
         //为该用户设置角色
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(loginUser.getRole().getRoleName());
+        simpleAuthorizationInfo.addRole(roleName);
         //获取数据库中该登录角色所拥有的权限
-        List<Function> functionList = functionService.getFunctionByRoleId(loginUser.getRole().getId());
+        PlatformRole role = roleService.getRole(roleName);
+        Integer roleId = role.getId();
+        List<Function> functionList = functionService.getFunctionByRoleId(roleId);
         //为该用户设置权限
         for (Function func : functionList) {
             simpleAuthorizationInfo.addStringPermission(func.getFunctionCode());
@@ -61,9 +73,9 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         //用户传递的登录参数
-        LoginToken loginToken = (LoginToken) token;
+        String loginToken = (String) token.getPrincipal();
         //验证账号是否存在
-        String userName = loginToken.getUsername();
+        String userName = JwtManager.getUsername(loginToken);
         PlatformUser platformUser = userService.selectPlaformUserByLoginName(userName);
         if (null == platformUser) {
             throw new UnknownAccountException("未知用户");
@@ -72,23 +84,29 @@ public class MyRealm extends AuthorizingRealm {
         if (Boolean.TRUE.equals(platformUser.getLocked())) {
             throw new LockedAccountException("用户被锁定");
         }
+        //验证密码
+        if(!JwtManager.verify(loginToken,userName,platformUser.getPassword())){
+            throw new UnknownAccountException("token认证失败");
+        }
         //验证用户是否有该角色
-        Integer roleId = loginToken.getRole().getId();
+        String roleName = JwtManager.getRoleName(loginToken);
+        PlatformRole role = roleService.getRole(roleName);
+        Integer roleId = role.getId();
         PlatformRoleUser userRole = roleService.hasRole(platformUser.getId(), roleId);
         if (null == userRole) {
-            throw new UnknownAccountException("该用户无" + loginToken.getRole().getDisplayRoleName() + "角色");
+            throw new UnknownAccountException("该用户无" + role.getDisplayRoleName() + "角色");
         }
         //将信息封装成登录用户信息
         LoginUserEntity loginUserEntity = new LoginUserEntity();
         loginUserEntity.setLoginName(platformUser.getLoginName());
         loginUserEntity.setPassword(platformUser.getPassword());
         loginUserEntity.setUserId(platformUser.getId());
-        loginUserEntity.setRole(loginToken.getRole());
+        loginUserEntity.setRole(role);
         //验证密码
         SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(
-                loginUserEntity,   //数据库用户对象
-                platformUser.getPassword(),   //数据库中保存的密码
-                getName());                   //获取用户名和密码的类名
+                loginToken,   //数据库用户对象
+                loginToken,   //数据库中保存的密码
+                getName()); //获取用户名和密码的类名
         return simpleAuthenticationInfo;
     }
 }

@@ -1,9 +1,12 @@
 package diana.maven.project.config;
 
+import diana.maven.project.jwt.JwtFilter;
 import diana.maven.project.shiro.MyRealm;
 import diana.maven.project.shiro.ShiroExceptionResolver;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -12,6 +15,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,6 +32,11 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
 
+        //添加自定义过滤器，并取名jwt
+        LinkedHashMap<String, Filter> filterLinkedHashMap = new LinkedHashMap<>();
+        filterLinkedHashMap.put("jwt",jwtFilter());
+        shiroFilterFactoryBean.setFilters(filterLinkedHashMap);
+
         //配置访问权限，其中authc指定需要认证的uri，anon指定排除认证的uri
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         filterChainDefinitionMap.put("/static/bootstrap/**", "anon");
@@ -36,6 +45,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login/login", "anon");
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**","jwt");
+
 
         //配置登录的url和登录成功的url以及验证失败的url
         shiroFilterFactoryBean.setLoginUrl("/static/html/login.html");
@@ -47,9 +58,22 @@ public class ShiroConfig {
     }
 
     @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter();
+    }
+
+    @Bean
     SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myRealm());
+
+        //关闭shiro自带的session，该项目是整合jwt时需要
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
+
         return securityManager;
     }
 
@@ -60,8 +84,9 @@ public class ShiroConfig {
         return myRealm;
     }
 
+
+    //设置加密算法为MD5
     @Bean
-        //设置加密算法为MD5
     HashedCredentialsMatcher credentialsMatcher() {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName(Md5Hash.ALGORITHM_NAME);
