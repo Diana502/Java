@@ -79,19 +79,20 @@ public class ShiroConfig {
     @Bean
     MyRealm myRealm() {
         MyRealm myRealm = new MyRealm();
+        //不设置，默认明文验证，但由于本项目使用token且token里的密码是密文，所以可以就用默认设置
 //        myRealm.setCredentialsMatcher(credentialsMatcher());
         return myRealm;
     }
 
 
     //设置加密算法为MD5
-    @Bean
-    HashedCredentialsMatcher credentialsMatcher() {
-        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-        credentialsMatcher.setHashAlgorithmName(Md5Hash.ALGORITHM_NAME);
-        credentialsMatcher.setHashIterations(1);  //MD5加密次数  如果是2就相当于MD5(MD5(source))
-        return credentialsMatcher;
-    }
+//    @Bean
+//    HashedCredentialsMatcher credentialsMatcher() {
+//        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+//        credentialsMatcher.setHashAlgorithmName(Md5Hash.ALGORITHM_NAME);
+//        credentialsMatcher.setHashIterations(1);  //MD5加密次数  如果是2就相当于MD5(MD5(source))
+//        return credentialsMatcher;
+//    }
 
     /**
      * 开启Shiro注解(如@RequiresRoles,@RequiresPermissions),
