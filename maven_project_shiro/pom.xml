@@ -41,7 +41,7 @@
     <!-- servlet版本 -->
     <servlet.version>3.1.0</servlet.version>
     <!--Spring-->
-    <spring.version>4.3.20.RELEASE</spring.version>
+    <spring.version>5.2.20.RELEASE</spring.version>
     <!--日志-->
     <log4j.version>1.2.17</log4j.version>
     <!--数据库连接池-->
